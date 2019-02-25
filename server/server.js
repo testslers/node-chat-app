@@ -15,14 +15,19 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('New user connected');
 
-    socket.emit('newMessage', {
-        from: 'Archie.Kesseler@gmail.com',
-        text: 'Hi from Archie',
-        createdAt: 123
-    });
+    // socket.emit('newMessage', { // emits an event to a single connection
+    //     from: 'Archie.Kesseler@gmail.com',
+    //     text: 'Hi from Archie',
+    //     createdAt: 123
+    // });
 
     socket.on('createMessage', (message) => {
         console.log(`User ${message.from} created a new message: ${message.text}`);
+        io.emit('newMessage',{  // io.emits event to every connection, vs socket.emit that does it only for that one
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
     });
 
     socket.on('disconnect', (socket) => {
