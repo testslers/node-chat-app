@@ -20,6 +20,20 @@ io.on('connection', (socket) => {
     //     text: 'Hi from Archie',
     //     createdAt: 123
     // });
+    // socket.emit from admin text 'Welcome to the chat app'
+    // socket.broadcast.emit New user joined
+
+    socket.emit('newMessage', { // emits an event to a single connection
+        from: 'Admin',
+        text: 'Welcome to the chat app',
+        createdAt: new Date().getTime()
+    });
+
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: 'New user joined',
+        createdAt: new Date().getTime()
+    });
 
     socket.on('createMessage', (message) => {
         console.log(`User ${message.from} created a new message: ${message.text}`);
@@ -28,6 +42,11 @@ io.on('connection', (socket) => {
             text: message.text,
             createdAt: new Date().getTime()
         });
+        // socket.broadcast.emit('newMessage', {  // emits for all but this socket
+        //     from: message.from,
+        //     text: message.text,
+        //     createdAt: new Date().getTime()
+        // });
     });
 
     socket.on('disconnect', (socket) => {
