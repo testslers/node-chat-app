@@ -2,6 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
+const {generateMessage} = require('./utils/message');
 
 const publicPath = path.join(__dirname, "../public"); // built-in 'path' module
 const port = process.env.PORT || 3000;
@@ -23,25 +24,14 @@ io.on('connection', (socket) => {
     // socket.emit from admin text 'Welcome to the chat app'
     // socket.broadcast.emit New user joined
 
-    socket.emit('newMessage', { // emits an event to a single connection
-        from: 'Admin',
-        text: 'Welcome to the chat app',
-        createdAt: new Date().getTime()
-    });
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
 
-    socket.broadcast.emit('newMessage', {
-        from: 'Admin',
-        text: 'New user joined',
-        createdAt: new Date().getTime()
-    });
+    socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
     socket.on('createMessage', (message) => {
         console.log(`User ${message.from} created a new message: ${message.text}`);
-        io.emit('newMessage',{  // io.emits event to every connection, vs socket.emit that does it only for that one
-            from: message.from,
-            text: message.text,
-            createdAt: new Date().getTime()
-        });
+        io.emit('newMessage', generateMessage(message.from, message.text));
+
         // socket.broadcast.emit('newMessage', {  // emits for all but this socket
         //     from: message.from,
         //     text: message.text,
