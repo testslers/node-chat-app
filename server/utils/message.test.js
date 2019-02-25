@@ -8,7 +8,7 @@ describe('generateMessage', () => {
         let text = 'Welcome';
         let msg = generateMessage(from, text);
         console.log(msg);
-        expect(msg.createdAt).toBeA('number');
+         expect(msg.createdAt.valueOf()).toBeA('number');
         expect(msg).toInclude({
             from, text
         });
@@ -26,7 +26,7 @@ describe('generateLocationMessage', () => {
        expect(result).toInclude({
            from: from,
            url: url
-       })
+       });
 
        expect(result.createdAt).toBeA('number');
    });
