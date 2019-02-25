@@ -16,36 +16,20 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('New user connected');
 
-    // socket.emit('newMessage', { // emits an event to a single connection
-    //     from: 'Archie.Kesseler@gmail.com',
-    //     text: 'Hi from Archie',
-    //     createdAt: 123
-    // });
-    // socket.emit from admin text 'Welcome to the chat app'
-    // socket.broadcast.emit New user joined
-
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
 
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
-    socket.on('createMessage', (message) => {
+    socket.on('createMessage', (message, callback) => {
         console.log(`User ${message.from} created a new message: ${message.text}`);
         io.emit('newMessage', generateMessage(message.from, message.text));
-
-        // socket.broadcast.emit('newMessage', {  // emits for all but this socket
-        //     from: message.from,
-        //     text: message.text,
-        //     createdAt: new Date().getTime()
-        // });
+        callback('This is from the server');
     });
 
     socket.on('disconnect', (socket) => {
         console.log('Disconnected from server');
     });
 });
-
-// newMessage event -- server to the client: {from: '', text: '', createdAt: 123}
-// createMessage - client to the server: {from: '', text: ''}
 
 server.listen(port, () => {
     console.log(`Server is listening on port ${port}`);

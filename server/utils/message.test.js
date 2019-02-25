@@ -12,6 +12,5 @@ describe('generateMessage', () => {
         expect(msg).toInclude({
             from, text
         });
-        //expect(msg.text).toInclude(text);
     })
 });
