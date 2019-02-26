@@ -90,7 +90,6 @@ jQuery('#message-form').on('submit', function (event) {
     event.preventDefault();
 
     socket.emit('createMessage', {
-        from: 'User',
         text: messageTextbox.val()
     }, function () {
         messageTextbox.val(''); // clear the string
